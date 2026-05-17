@@ -1,0 +1,1495 @@
+<!DOCTYPE html>
+<html lang="da">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Patio — Café & Eatery · Helsingør</title>
+<meta name="description" content="Nordisk café og eatery i hjertet af Helsingør. Surdejsbrød, baristakaffe og naturvin i rammer tegnet af Kristina Dam Studio." />
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@300;400;500&family=Jost:wght@300;400;500&display=swap" rel="stylesheet">
+
+<style>
+  :root {
+    /* Extended palette — same warm earth family, more tonal range */
+    --cream:      #F5F0EB;   /* base */
+    --cream-2:    #EFE7DA;   /* warm cream */
+    --linen:      #E8DFD2;   /* linen */
+    --sand:       #D9C7AE;   /* light sand */
+    --clay:       #C4A882;   /* clay accent */
+    --terracotta: #B88564;   /* warm terracotta */
+    --sage:       #8A9180;   /* dusty sage */
+    --olive:      #6E6A56;   /* deep olive */
+    --bark:       #5A4A3D;   /* bark brown */
+    --ink:        #2C2623;   /* near-black brown */
+    --ink-soft:   #6B5D52;   /* muted body text */
+    --line:       #D2C6B7;
+    --rose:       #E5CDBC;   /* soft blush */
+
+    --serif: "Cormorant Garamond", Georgia, serif;
+    --sans:  "Jost", system-ui, sans-serif;
+  }
+
+  *, *::before, *::after { box-sizing: border-box; }
+  html { scroll-behavior: smooth; }
+
+  body {
+    margin: 0;
+    background: var(--cream);
+    color: var(--ink);
+    font-family: var(--sans);
+    font-weight: 300;
+    font-size: 16px;
+    line-height: 1.7;
+    letter-spacing: 0.01em;
+    -webkit-font-smoothing: antialiased;
+    text-rendering: optimizeLegibility;
+    opacity: 0;
+    transition: opacity 1.4s ease;
+    overflow-x: hidden;
+  }
+  body.loaded { opacity: 1; }
+
+  /* paper grain overlay */
+  body::before {
+    content: "";
+    position: fixed;
+    inset: 0;
+    pointer-events: none;
+    z-index: 1;
+    opacity: 0.3;
+    mix-blend-mode: multiply;
+    background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='180' height='180'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='2' stitchTiles='stitch'/><feColorMatrix values='0 0 0 0 0.17  0 0 0 0 0.15  0 0 0 0 0.13  0 0 0 0.06 0'/></filter><rect width='100%25' height='100%25' filter='url(%23n)'/></svg>");
+  }
+
+  ::selection { background: var(--clay); color: var(--cream); }
+
+  /* ─── NAV ─── */
+  nav.top {
+    position: fixed;
+    top: 0; left: 0; right: 0;
+    z-index: 50;
+    padding: 22px 40px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background: rgba(245, 240, 235, 0);
+    backdrop-filter: blur(0px);
+    transition: background 0.5s ease, padding 0.5s ease, backdrop-filter 0.5s ease, border-color 0.5s ease;
+    border-bottom: 1px solid transparent;
+  }
+  nav.top.scrolled {
+    background: rgba(245, 240, 235, 0.86);
+    backdrop-filter: blur(10px);
+    padding: 14px 40px;
+    border-bottom-color: var(--line);
+  }
+  .nav-mark {
+    font-family: var(--serif);
+    font-weight: 400;
+    font-size: 22px;
+    letter-spacing: 0.42em;
+    color: var(--ink);
+    text-decoration: none;
+    padding-left: 0.42em;
+  }
+  .nav-links {
+    display: flex;
+    gap: 36px;
+    list-style: none;
+    margin: 0; padding: 0;
+  }
+  .nav-links a {
+    font-size: 11px;
+    letter-spacing: 0.32em;
+    text-transform: uppercase;
+    color: var(--ink);
+    text-decoration: none;
+    position: relative;
+    padding-bottom: 4px;
+    transition: color 0.35s ease;
+  }
+  .nav-links a::after {
+    content: "";
+    position: absolute;
+    left: 0; bottom: 0;
+    width: 100%;
+    height: 1px;
+    background: var(--terracotta);
+    transform: scaleX(0);
+    transform-origin: right;
+    transition: transform 0.5s cubic-bezier(.7,.1,.2,1);
+  }
+  .nav-links a:hover { color: var(--terracotta); }
+  .nav-links a:hover::after { transform: scaleX(1); transform-origin: left; }
+
+  .nav-toggle {
+    display: none;
+    background: none;
+    border: 0;
+    cursor: pointer;
+    width: 28px; height: 20px;
+    position: relative;
+  }
+  .nav-toggle span {
+    position: absolute;
+    left: 0; right: 0;
+    height: 1px;
+    background: var(--ink);
+    transition: transform 0.4s ease, opacity 0.3s ease, top 0.4s ease;
+  }
+  .nav-toggle span:nth-child(1) { top: 4px; }
+  .nav-toggle span:nth-child(2) { top: 14px; }
+  .nav-toggle.open span:nth-child(1) { top: 9px; transform: rotate(45deg); }
+  .nav-toggle.open span:nth-child(2) { top: 9px; transform: rotate(-45deg); }
+
+  /* ─── layout helpers ─── */
+  .wrap {
+    width: 100%;
+    max-width: 1180px;
+    margin: 0 auto;
+    padding: 0 40px;
+    position: relative;
+    z-index: 2;
+  }
+  section { padding: 160px 0; position: relative; z-index: 2; }
+
+  .eyebrow {
+    font-family: var(--sans);
+    font-size: 11px;
+    font-weight: 400;
+    letter-spacing: 0.36em;
+    text-transform: uppercase;
+    color: var(--terracotta);
+    margin: 0 0 28px;
+  }
+  h2 {
+    font-family: var(--serif);
+    font-weight: 300;
+    font-size: clamp(34px, 4.4vw, 58px);
+    line-height: 1.12;
+    letter-spacing: 0.005em;
+    margin: 0 0 36px;
+    color: var(--ink);
+  }
+  p {
+    margin: 0 0 1.2em;
+    color: var(--ink-soft);
+    max-width: 60ch;
+  }
+
+  .rule {
+    width: 40px; height: 1px;
+    background: var(--clay);
+    border: 0;
+    margin: 0 0 36px;
+  }
+  .rule.center { margin-left: auto; margin-right: auto; }
+
+  /* ─── reveal animations ─── */
+  .reveal {
+    opacity: 0;
+    transform: translateY(28px);
+    transition: opacity 1.3s ease, transform 1.3s ease;
+  }
+  .reveal.in { opacity: 1; transform: none; }
+
+  .reveal-left { opacity: 0; transform: translateX(-40px); transition: opacity 1.3s ease, transform 1.3s ease; }
+  .reveal-left.in { opacity: 1; transform: none; }
+
+  .reveal-right { opacity: 0; transform: translateX(40px); transition: opacity 1.3s ease, transform 1.3s ease; }
+  .reveal-right.in { opacity: 1; transform: none; }
+
+  /* stagger children */
+  .stagger > * { opacity: 0; transform: translateY(24px); transition: opacity 1s ease, transform 1s ease; }
+  .stagger.in > *:nth-child(1) { transition-delay: 0.05s; opacity: 1; transform: none; }
+  .stagger.in > *:nth-child(2) { transition-delay: 0.18s; opacity: 1; transform: none; }
+  .stagger.in > *:nth-child(3) { transition-delay: 0.31s; opacity: 1; transform: none; }
+  .stagger.in > *:nth-child(4) { transition-delay: 0.44s; opacity: 1; transform: none; }
+  .stagger.in > *:nth-child(5) { transition-delay: 0.57s; opacity: 1; transform: none; }
+  .stagger.in > *:nth-child(6) { transition-delay: 0.70s; opacity: 1; transform: none; }
+
+  /* ─── HERO ─── */
+  .hero {
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    padding: 140px 40px 80px;
+    position: relative;
+    background: linear-gradient(180deg, var(--cream) 0%, var(--cream-2) 100%);
+    overflow: hidden;
+  }
+  /* decorative soft blobs */
+  .hero::before, .hero::after {
+    content: "";
+    position: absolute;
+    border-radius: 50%;
+    filter: blur(80px);
+    opacity: 0.5;
+    z-index: 0;
+    animation: drift 14s ease-in-out infinite;
+  }
+  .hero::before {
+    width: 460px; height: 460px;
+    background: var(--rose);
+    top: -120px; left: -120px;
+  }
+  .hero::after {
+    width: 540px; height: 540px;
+    background: var(--sand);
+    bottom: -200px; right: -180px;
+    animation-delay: -7s;
+  }
+  @keyframes drift {
+    0%, 100% { transform: translate(0, 0) scale(1); }
+    50%      { transform: translate(30px, -20px) scale(1.06); }
+  }
+
+  .hero-inner { position: relative; z-index: 2; }
+
+  .hero-mark {
+    font-family: var(--serif);
+    font-weight: 300;
+    font-size: clamp(80px, 18vw, 220px);
+    letter-spacing: 0.32em;
+    line-height: 1;
+    margin: 0;
+    padding-left: 0.32em;
+    color: var(--ink);
+    display: flex;
+    justify-content: center;
+  }
+  .hero-mark span {
+    display: inline-block;
+    opacity: 0;
+    transform: translateY(40px);
+    animation: letterIn 1.1s cubic-bezier(.2,.7,.2,1) forwards;
+  }
+  .hero-mark span:nth-child(1) { animation-delay: 0.25s; }
+  .hero-mark span:nth-child(2) { animation-delay: 0.40s; }
+  .hero-mark span:nth-child(3) { animation-delay: 0.55s; }
+  .hero-mark span:nth-child(4) { animation-delay: 0.70s; }
+  .hero-mark span:nth-child(5) { animation-delay: 0.85s; }
+  @keyframes letterIn {
+    to { opacity: 1; transform: none; }
+  }
+
+  .hero-sub {
+    margin-top: 28px;
+    font-size: 13px;
+    letter-spacing: 0.42em;
+    text-transform: uppercase;
+    color: var(--bark);
+    opacity: 0;
+    animation: fadeUp 1.4s ease 1.0s forwards;
+  }
+  .hero-divider {
+    width: 1px; height: 56px;
+    background: var(--clay);
+    margin: 36px auto 24px;
+    transform-origin: top;
+    transform: scaleY(0);
+    animation: lineDown 1.2s ease 1.2s forwards;
+  }
+  @keyframes lineDown { to { transform: scaleY(1); } }
+
+  .hero-place {
+    font-family: var(--serif);
+    font-style: italic;
+    font-size: 17px;
+    color: var(--ink-soft);
+    letter-spacing: 0.04em;
+    opacity: 0;
+    animation: fadeUp 1.4s ease 1.5s forwards;
+  }
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(14px); }
+    to   { opacity: 1; transform: none; }
+  }
+
+  .hero-cta {
+    display: inline-flex;
+    align-items: center;
+    gap: 14px;
+    margin-top: 48px;
+    padding: 16px 32px;
+    background: var(--ink);
+    color: var(--cream);
+    font-size: 11px;
+    letter-spacing: 0.36em;
+    text-transform: uppercase;
+    text-decoration: none;
+    border-radius: 999px;
+    opacity: 0;
+    animation: fadeUp 1.4s ease 1.7s forwards;
+    transition: background 0.45s ease, transform 0.45s ease, gap 0.4s ease;
+  }
+  .hero-cta:hover {
+    background: var(--terracotta);
+    transform: translateY(-2px);
+    gap: 20px;
+  }
+  .hero-cta svg { width: 14px; height: 14px; stroke: currentColor; fill: none; stroke-width: 1.4; }
+
+  /* ─── BUTTONS ─── */
+  .btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 14px;
+    padding: 16px 30px;
+    font-family: var(--sans);
+    font-weight: 400;
+    font-size: 11px;
+    letter-spacing: 0.34em;
+    text-transform: uppercase;
+    color: var(--cream);
+    background: var(--ink);
+    border: 1px solid var(--ink);
+    border-radius: 999px;
+    cursor: pointer;
+    text-decoration: none;
+    transition: background 0.4s ease, color 0.4s ease, border-color 0.4s ease, transform 0.4s ease;
+  }
+  .btn:hover {
+    background: var(--terracotta);
+    border-color: var(--terracotta);
+    transform: translateY(-2px);
+  }
+  .btn.ghost {
+    background: transparent;
+    color: var(--ink);
+  }
+  .btn.ghost:hover {
+    background: var(--ink);
+    color: var(--cream);
+  }
+
+  /* ─── ABOUT ─── */
+  .about { text-align: center; background: var(--cream); }
+  .about .wrap { max-width: 800px; }
+  .about p {
+    margin: 0 auto;
+    font-family: var(--serif);
+    font-weight: 300;
+    font-size: clamp(22px, 2.4vw, 30px);
+    line-height: 1.55;
+    color: var(--ink);
+  }
+  .about-stats {
+    margin-top: 80px;
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 24px;
+    border-top: 1px solid var(--line);
+    border-bottom: 1px solid var(--line);
+    padding: 40px 0;
+  }
+  .stat-num {
+    font-family: var(--serif);
+    font-size: 44px;
+    font-weight: 300;
+    color: var(--terracotta);
+    line-height: 1;
+  }
+  .stat-label {
+    margin-top: 10px;
+    font-size: 10px;
+    letter-spacing: 0.32em;
+    text-transform: uppercase;
+    color: var(--ink-soft);
+  }
+
+  /* ─── MENU (tabbed, functional) ─── */
+  .menu { background: var(--linen); }
+  .menu-head { text-align: center; margin-bottom: 60px; }
+
+  .tabs {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 8px;
+    margin-bottom: 60px;
+  }
+  .tab {
+    background: transparent;
+    border: 1px solid transparent;
+    color: var(--ink-soft);
+    font-family: var(--sans);
+    font-weight: 300;
+    font-size: 11px;
+    letter-spacing: 0.32em;
+    text-transform: uppercase;
+    padding: 12px 22px;
+    border-radius: 999px;
+    cursor: pointer;
+    transition: color 0.4s ease, background 0.4s ease, border-color 0.4s ease;
+  }
+  .tab:hover { color: var(--ink); }
+  .tab.active {
+    color: var(--cream);
+    background: var(--bark);
+    border-color: var(--bark);
+  }
+
+  .menu-panel {
+    display: none;
+    animation: panelIn 0.7s ease;
+  }
+  .menu-panel.active { display: grid; }
+  .menu-panel {
+    grid-template-columns: 1fr 1fr;
+    column-gap: 80px;
+    row-gap: 0;
+  }
+  @keyframes panelIn {
+    from { opacity: 0; transform: translateY(14px); }
+    to   { opacity: 1; transform: none; }
+  }
+
+  .dish {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    gap: 20px;
+    padding: 22px 0;
+    border-bottom: 1px dashed var(--line);
+  }
+  .dish-info h4 {
+    margin: 0 0 6px;
+    font-family: var(--serif);
+    font-size: 22px;
+    font-weight: 400;
+    color: var(--ink);
+    letter-spacing: 0.01em;
+  }
+  .dish-info span {
+    font-size: 13px;
+    color: var(--ink-soft);
+    line-height: 1.5;
+  }
+  .dish-price {
+    font-family: var(--serif);
+    font-size: 20px;
+    font-weight: 400;
+    color: var(--terracotta);
+    white-space: nowrap;
+  }
+  .dish-dots {
+    flex: 1;
+    border-bottom: 1px dotted var(--line);
+    transform: translateY(-6px);
+    min-width: 30px;
+  }
+
+  /* ─── COURTYARD ─── */
+  .courtyard {
+    background: var(--sand);
+    text-align: center;
+    color: var(--ink);
+    position: relative;
+    overflow: hidden;
+  }
+  .courtyard::before {
+    content: "";
+    position: absolute;
+    width: 600px; height: 600px;
+    border-radius: 50%;
+    background: var(--clay);
+    opacity: 0.25;
+    filter: blur(100px);
+    top: -200px; right: -200px;
+  }
+  .courtyard .wrap { max-width: 760px; position: relative; }
+  .courtyard .eyebrow { color: var(--bark); }
+  .courtyard p {
+    margin: 0 auto 40px;
+    font-family: var(--serif);
+    font-style: italic;
+    font-weight: 300;
+    font-size: clamp(22px, 2.2vw, 28px);
+    line-height: 1.55;
+    color: var(--ink);
+  }
+  .courtyard-tags {
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin-top: 40px;
+  }
+  .courtyard-tags span {
+    padding: 8px 18px;
+    background: rgba(255,255,255,0.45);
+    border: 1px solid rgba(44,38,35,0.1);
+    border-radius: 999px;
+    font-size: 11px;
+    letter-spacing: 0.28em;
+    text-transform: uppercase;
+    color: var(--bark);
+  }
+
+  /* ─── HOURS ─── */
+  .hours { background: var(--cream); }
+  .hours .wrap {
+    display: grid;
+    grid-template-columns: 1fr 1.1fr;
+    gap: 120px;
+    align-items: start;
+  }
+  .hours-list {
+    list-style: none;
+    padding: 0; margin: 0;
+    font-family: var(--serif);
+    font-size: 22px;
+    font-weight: 300;
+  }
+  .hours-list li {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    padding: 20px 0;
+    border-bottom: 1px solid var(--line);
+    color: var(--ink);
+    transition: color 0.4s ease, padding-left 0.5s ease;
+  }
+  .hours-list li:last-child { border-bottom: 0; }
+  .hours-list .time {
+    font-family: var(--sans);
+    font-size: 14px;
+    letter-spacing: 0.18em;
+    color: var(--ink-soft);
+  }
+  .hours-list li.today {
+    padding-left: 18px;
+    background: linear-gradient(90deg, var(--rose) 0%, transparent 100%);
+    border-radius: 4px;
+  }
+  .hours-list li.today .day::before {
+    content: "I dag · ";
+    color: var(--terracotta);
+    font-family: var(--sans);
+    font-size: 10px;
+    letter-spacing: 0.32em;
+    text-transform: uppercase;
+    vertical-align: middle;
+    margin-right: 14px;
+  }
+  .hours-list li.today .time {
+    color: var(--ink);
+    font-weight: 400;
+  }
+  .status-pill {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    margin-top: 24px;
+    padding: 8px 18px;
+    border-radius: 999px;
+    font-size: 11px;
+    letter-spacing: 0.3em;
+    text-transform: uppercase;
+    background: var(--cream-2);
+    color: var(--bark);
+    border: 1px solid var(--line);
+  }
+  .status-pill .dot {
+    width: 8px; height: 8px;
+    border-radius: 50%;
+    background: var(--sage);
+    box-shadow: 0 0 0 0 rgba(138,145,128,0.6);
+    animation: pulse 2.4s ease infinite;
+  }
+  .status-pill.closed .dot {
+    background: var(--terracotta);
+    box-shadow: 0 0 0 0 rgba(184,133,100,0.6);
+  }
+  @keyframes pulse {
+    0%   { box-shadow: 0 0 0 0 rgba(138,145,128,0.55); }
+    70%  { box-shadow: 0 0 0 12px rgba(138,145,128,0); }
+    100% { box-shadow: 0 0 0 0 rgba(138,145,128,0); }
+  }
+
+  /* ─── BOOKING ─── */
+  .booking { background: var(--bark); color: var(--cream); }
+  .booking .eyebrow { color: var(--rose); }
+  .booking h2 { color: var(--cream); }
+  .booking p { color: rgba(245, 240, 235, 0.7); }
+  .booking .rule { background: var(--clay); }
+
+  .booking .wrap {
+    display: grid;
+    grid-template-columns: 1fr 1.3fr;
+    gap: 100px;
+    align-items: start;
+  }
+
+  form.booking-form {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 24px;
+  }
+  .field { display: flex; flex-direction: column; }
+  .field.full { grid-column: 1 / -1; }
+  .field label {
+    font-size: 10px;
+    letter-spacing: 0.32em;
+    text-transform: uppercase;
+    color: rgba(245,240,235,0.6);
+    margin-bottom: 10px;
+  }
+  .field input,
+  .field select,
+  .field textarea {
+    background: transparent;
+    border: 0;
+    border-bottom: 1px solid rgba(245,240,235,0.3);
+    padding: 12px 0;
+    color: var(--cream);
+    font-family: var(--sans);
+    font-size: 16px;
+    font-weight: 300;
+    transition: border-color 0.4s ease;
+    border-radius: 0;
+  }
+  .field textarea {
+    min-height: 80px;
+    resize: vertical;
+    font-family: var(--sans);
+  }
+  .field input:focus,
+  .field select:focus,
+  .field textarea:focus {
+    outline: none;
+    border-bottom-color: var(--rose);
+  }
+  .field select option { background: var(--bark); color: var(--cream); }
+  .field input::placeholder { color: rgba(245,240,235,0.35); }
+
+  .booking-submit {
+    grid-column: 1 / -1;
+    margin-top: 14px;
+    display: flex;
+    align-items: center;
+    gap: 24px;
+  }
+  .booking-submit .btn {
+    background: var(--rose);
+    color: var(--ink);
+    border-color: var(--rose);
+  }
+  .booking-submit .btn:hover {
+    background: var(--cream);
+    border-color: var(--cream);
+    color: var(--ink);
+  }
+  .form-msg {
+    font-size: 12px;
+    letter-spacing: 0.18em;
+    color: var(--rose);
+    opacity: 0;
+    transition: opacity 0.5s ease;
+  }
+  .form-msg.show { opacity: 1; }
+
+  /* ─── CONTACT ─── */
+  .contact { background: var(--cream-2); }
+  .contact .wrap {
+    display: grid;
+    grid-template-columns: 1fr 1.2fr;
+    gap: 100px;
+    align-items: start;
+  }
+  .contact .info dl { margin: 0; }
+  .contact .info dt {
+    font-size: 10px;
+    letter-spacing: 0.34em;
+    text-transform: uppercase;
+    color: var(--ink-soft);
+    margin: 36px 0 8px;
+  }
+  .contact .info dt:first-of-type { margin-top: 0; }
+  .contact .info dd {
+    margin: 0;
+    font-family: var(--serif);
+    font-size: 22px;
+    font-weight: 300;
+    line-height: 1.4;
+    color: var(--ink);
+  }
+  .contact a {
+    color: inherit;
+    text-decoration: none;
+    background-image: linear-gradient(var(--terracotta), var(--terracotta));
+    background-repeat: no-repeat;
+    background-size: 0% 1px;
+    background-position: 0 100%;
+    transition: background-size 0.5s ease, color 0.5s ease;
+    padding-bottom: 2px;
+  }
+  .contact a:hover {
+    color: var(--terracotta);
+    background-size: 100% 1px;
+  }
+
+  .socials {
+    margin-top: 44px;
+    display: flex;
+    gap: 14px;
+  }
+  .socials a {
+    width: 40px; height: 40px;
+    border: 1px solid var(--line);
+    border-radius: 50%;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--ink);
+    transition: background 0.4s ease, color 0.4s ease, border-color 0.4s ease, transform 0.4s ease;
+  }
+  .socials a:hover {
+    background: var(--terracotta);
+    color: var(--cream);
+    border-color: var(--terracotta);
+    transform: translateY(-3px) rotate(-6deg);
+  }
+  .socials svg { width: 16px; height: 16px; stroke: currentColor; fill: none; stroke-width: 1.4; }
+
+  .map {
+    width: 100%;
+    aspect-ratio: 4 / 3.4;
+    border: 1px solid var(--line);
+    overflow: hidden;
+    position: relative;
+    border-radius: 4px;
+  }
+  .map iframe {
+    width: 100%; height: 100%;
+    border: 0; display: block;
+    filter: grayscale(1) sepia(0.15) contrast(0.95) brightness(1.02);
+    transition: filter 0.7s ease, transform 0.7s ease;
+  }
+  .map:hover iframe {
+    filter: grayscale(0.4) sepia(0.1) contrast(0.95);
+    transform: scale(1.02);
+  }
+
+  /* ─── NEWSLETTER ─── */
+  .newsletter {
+    background: var(--olive);
+    color: var(--cream);
+    padding: 100px 0;
+    text-align: center;
+  }
+  .newsletter .wrap { max-width: 620px; }
+  .newsletter h2 { color: var(--cream); }
+  .newsletter p { color: rgba(245,240,235,0.75); margin: 0 auto 32px; }
+  .newsletter .eyebrow { color: var(--rose); }
+  .newsletter .rule { background: var(--rose); }
+
+  .news-form {
+    display: flex;
+    gap: 0;
+    border: 1px solid rgba(245,240,235,0.4);
+    border-radius: 999px;
+    overflow: hidden;
+    max-width: 460px;
+    margin: 0 auto;
+    transition: border-color 0.4s ease;
+  }
+  .news-form:focus-within { border-color: var(--rose); }
+  .news-form input {
+    flex: 1;
+    background: transparent;
+    border: 0;
+    padding: 16px 24px;
+    color: var(--cream);
+    font-family: var(--sans);
+    font-size: 14px;
+  }
+  .news-form input::placeholder { color: rgba(245,240,235,0.5); }
+  .news-form input:focus { outline: none; }
+  .news-form button {
+    background: var(--cream);
+    color: var(--ink);
+    border: 0;
+    padding: 0 28px;
+    font-size: 11px;
+    letter-spacing: 0.32em;
+    text-transform: uppercase;
+    cursor: pointer;
+    transition: background 0.4s ease, color 0.4s ease;
+  }
+  .news-form button:hover {
+    background: var(--terracotta);
+    color: var(--cream);
+  }
+  .news-msg { margin-top: 18px; font-size: 12px; color: var(--rose); opacity: 0; transition: opacity 0.5s ease; }
+  .news-msg.show { opacity: 1; }
+
+  /* ─── FOOTER ─── */
+  footer {
+    padding: 70px 40px 50px;
+    text-align: center;
+    background: var(--ink);
+    color: var(--cream);
+    position: relative;
+    z-index: 2;
+  }
+  .footer-mark {
+    font-family: var(--serif);
+    font-size: 20px;
+    letter-spacing: 0.42em;
+    margin: 0 0 22px;
+    color: var(--cream);
+    padding-left: 0.42em;
+  }
+  footer small {
+    font-size: 10px;
+    letter-spacing: 0.32em;
+    text-transform: uppercase;
+    color: rgba(245,240,235,0.5);
+    display: block;
+  }
+  .footer-socials {
+    display: flex;
+    gap: 16px;
+    justify-content: center;
+    margin: 22px 0 26px;
+  }
+  .footer-socials a {
+    color: rgba(245,240,235,0.6);
+    transition: color 0.4s ease, transform 0.4s ease;
+  }
+  .footer-socials a:hover { color: var(--rose); transform: translateY(-2px); }
+  .footer-socials svg { width: 16px; height: 16px; stroke: currentColor; fill: none; stroke-width: 1.4; }
+
+  /* ─── BACK TO TOP ─── */
+  .to-top {
+    position: fixed;
+    right: 28px;
+    bottom: 28px;
+    width: 46px; height: 46px;
+    background: var(--ink);
+    color: var(--cream);
+    border: 0;
+    border-radius: 50%;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    opacity: 0;
+    transform: translateY(20px);
+    transition: opacity 0.5s ease, transform 0.5s ease, background 0.4s ease;
+    z-index: 40;
+  }
+  .to-top.show { opacity: 1; transform: none; }
+  .to-top:hover { background: var(--terracotta); }
+  .to-top svg { width: 16px; height: 16px; stroke: currentColor; fill: none; stroke-width: 1.5; }
+
+  /* ─── RESPONSIVE ─── */
+  @media (max-width: 900px) {
+    nav.top { padding: 16px 24px; }
+    nav.top.scrolled { padding: 12px 24px; }
+    .nav-links {
+      position: fixed;
+      top: 0; right: 0;
+      height: 100vh; width: 75%;
+      max-width: 320px;
+      background: var(--cream);
+      border-left: 1px solid var(--line);
+      flex-direction: column;
+      justify-content: center;
+      gap: 28px;
+      padding: 60px 40px;
+      transform: translateX(100%);
+      transition: transform 0.5s cubic-bezier(.7,.1,.2,1);
+    }
+    .nav-links.open { transform: none; }
+    .nav-toggle { display: block; z-index: 60; }
+
+    section { padding: 110px 0; }
+    .wrap { padding: 0 28px; }
+
+    .hours .wrap,
+    .contact .wrap,
+    .booking .wrap {
+      grid-template-columns: 1fr;
+      gap: 56px;
+    }
+    .menu-panel { grid-template-columns: 1fr; column-gap: 0; }
+    .about-stats { grid-template-columns: 1fr; gap: 28px; }
+  }
+
+  @media (max-width: 560px) {
+    section { padding: 88px 0; }
+    .wrap { padding: 0 22px; }
+    .hero { padding: 120px 24px 70px; }
+    .hero-mark { letter-spacing: 0.22em; padding-left: 0.22em; }
+    form.booking-form { grid-template-columns: 1fr; }
+    .news-form { flex-direction: column; border-radius: 14px; }
+    .news-form button { padding: 14px; }
+    .nav-mark { font-size: 18px; }
+    .dish-price { font-size: 18px; }
+  }
+</style>
+</head>
+<body>
+
+  <!-- ─── NAVIGATION ─── -->
+  <nav class="top" id="nav">
+    <a href="#top" class="nav-mark">PATIO</a>
+    <ul class="nav-links" id="navLinks">
+      <li><a href="#om" data-link>Om os</a></li>
+      <li><a href="#menu" data-link>Menu</a></li>
+      <li><a href="#aabningstider" data-link>Åbningstider</a></li>
+      <li><a href="#booking" data-link>Bordbestilling</a></li>
+      <li><a href="#kontakt" data-link>Kontakt</a></li>
+    </ul>
+    <button class="nav-toggle" id="navToggle" aria-label="Menu">
+      <span></span><span></span>
+    </button>
+  </nav>
+
+  <!-- ─── HERO ─── -->
+  <header class="hero" id="top">
+    <div class="hero-inner">
+      <h1 class="hero-mark" aria-label="Patio">
+        <span>P</span><span>A</span><span>T</span><span>I</span><span>O</span>
+      </h1>
+      <div class="hero-sub">Café &nbsp;·&nbsp; Eatery</div>
+      <div class="hero-divider"></div>
+      <div class="hero-place">Stengade 34D &nbsp;·&nbsp; Helsingør</div>
+      <a href="#booking" class="hero-cta">
+        Reservér et bord
+        <svg viewBox="0 0 24 24"><path d="M5 12h14M13 5l7 7-7 7"/></svg>
+      </a>
+    </div>
+  </header>
+
+  <!-- ─── OM ─── -->
+  <section id="om" class="about">
+    <div class="wrap reveal">
+      <p class="eyebrow">Om os</p>
+      <hr class="rule center" />
+      <p>
+        Gemt bag en stille port på Stengade finder du Patio — en nordisk café
+        og eatery i hjertet af Helsingør. Surdejsbrød, baristakaffe, sæsonens
+        råvarer og et glas naturvin, serveret i rammer tegnet af Kristina Dam
+        Studio. Vi tror på det enkle, det ærlige og det vellavede.
+      </p>
+
+      <div class="about-stats stagger">
+        <div>
+          <div class="stat-num" data-count="2024">0</div>
+          <div class="stat-label">Grundlagt</div>
+        </div>
+        <div>
+          <div class="stat-num" data-count="34">0</div>
+          <div class="stat-label">Stengade · Helsingør</div>
+        </div>
+        <div>
+          <div class="stat-num" data-count="100">0</div>
+          <div class="stat-label">% Surdej</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ─── MENU ─── -->
+  <section id="menu" class="menu">
+    <div class="wrap">
+      <div class="menu-head reveal">
+        <p class="eyebrow">Vores menu</p>
+        <hr class="rule center" />
+        <h2>Smag dagen</h2>
+        <p style="margin: 0 auto;">Menukortet skifter med sæsonen. Her er et udvalg af det, vi serverer lige nu.</p>
+      </div>
+
+      <div class="tabs reveal" role="tablist">
+        <button class="tab active" data-tab="kaffe">Kaffe</button>
+        <button class="tab" data-tab="bagvaerk">Bagværk</button>
+        <button class="tab" data-tab="morgen">Morgen</button>
+        <button class="tab" data-tab="frokost">Frokost</button>
+        <button class="tab" data-tab="vin">Vin</button>
+      </div>
+
+      <div class="menu-panel active" data-panel="kaffe">
+        <div class="dish">
+          <div class="dish-info"><h4>Espresso</h4><span>Single eller dobbelt · husets blend</span></div>
+          <div class="dish-dots"></div><div class="dish-price">32</div>
+        </div>
+        <div class="dish">
+          <div class="dish-info"><h4>Flat White</h4><span>Dobbelt ristretto, dampet mælk</span></div>
+          <div class="dish-dots"></div><div class="dish-price">48</div>
+        </div>
+        <div class="dish">
+          <div class="dish-info"><h4>Cortado</h4><span>Espresso, lille mælk</span></div>
+          <div class="dish-dots"></div><div class="dish-price">42</div>
+        </div>
+        <div class="dish">
+          <div class="dish-info"><h4>Filter</h4><span>V60 · skiftende single origin</span></div>
+          <div class="dish-dots"></div><div class="dish-price">48</div>
+        </div>
+        <div class="dish">
+          <div class="dish-info"><h4>Cappuccino</h4><span>Klassisk, fyldigt mælkeskum</span></div>
+          <div class="dish-dots"></div><div class="dish-price">52</div>
+        </div>
+        <div class="dish">
+          <div class="dish-info"><h4>Matcha latte</h4><span>Ceremonial grade · mælk efter valg</span></div>
+          <div class="dish-dots"></div><div class="dish-price">58</div>
+        </div>
+      </div>
+
+      <div class="menu-panel" data-panel="bagvaerk">
+        <div class="dish">
+          <div class="dish-info"><h4>Surdejsbolle</h4><span>Med pisket smør og flagesalt</span></div>
+          <div class="dish-dots"></div><div class="dish-price">42</div>
+        </div>
+        <div class="dish">
+          <div class="dish-info"><h4>Kanelsnegl</h4><span>Smørdej, kardemomme, brun farin</span></div>
+          <div class="dish-dots"></div><div class="dish-price">38</div>
+        </div>
+        <div class="dish">
+          <div class="dish-info"><h4>Croissant</h4><span>Lagdelt smørdej · 72 timers gæring</span></div>
+          <div class="dish-dots"></div><div class="dish-price">42</div>
+        </div>
+        <div class="dish">
+          <div class="dish-info"><h4>Mandelhorn</h4><span>Glasur, ristede mandler</span></div>
+          <div class="dish-dots"></div><div class="dish-price">48</div>
+        </div>
+        <div class="dish">
+          <div class="dish-info"><h4>Sæsonkage</h4><span>Spørg efter dagens udvalg</span></div>
+          <div class="dish-dots"></div><div class="dish-price">58</div>
+        </div>
+        <div class="dish">
+          <div class="dish-info"><h4>Hel surdej</h4><span>800 g · forudbestilling muligt</span></div>
+          <div class="dish-dots"></div><div class="dish-price">85</div>
+        </div>
+      </div>
+
+      <div class="menu-panel" data-panel="morgen">
+        <div class="dish">
+          <div class="dish-info"><h4>Skyr-skål</h4><span>Hjemmelavet granola, æbledild, honning</span></div>
+          <div class="dish-dots"></div><div class="dish-price">95</div>
+        </div>
+        <div class="dish">
+          <div class="dish-info"><h4>Æg på surdej</h4><span>Pocheret æg, syrnet smør, dild</span></div>
+          <div class="dish-dots"></div><div class="dish-price">115</div>
+        </div>
+        <div class="dish">
+          <div class="dish-info"><h4>Avocado &amp; ricotta</h4><span>På ristet surdej, citron, chili</span></div>
+          <div class="dish-dots"></div><div class="dish-price">125</div>
+        </div>
+        <div class="dish">
+          <div class="dish-info"><h4>Grød</h4><span>Havre, brændt smør, kanelsukker</span></div>
+          <div class="dish-dots"></div><div class="dish-price">75</div>
+        </div>
+        <div class="dish">
+          <div class="dish-info"><h4>Morgenplade</h4><span>Surdej, ost, skinke, æg, syltede grøntsager</span></div>
+          <div class="dish-dots"></div><div class="dish-price">165</div>
+        </div>
+        <div class="dish">
+          <div class="dish-info"><h4>Smoothie</h4><span>Sæsonens frugt, havremælk, hørfrø</span></div>
+          <div class="dish-dots"></div><div class="dish-price">68</div>
+        </div>
+      </div>
+
+      <div class="menu-panel" data-panel="frokost">
+        <div class="dish">
+          <div class="dish-info"><h4>Smørrebrød · æg &amp; rejer</h4><span>På surdej, mayo, dild</span></div>
+          <div class="dish-dots"></div><div class="dish-price">135</div>
+        </div>
+        <div class="dish">
+          <div class="dish-info"><h4>Smørrebrød · roastbeef</h4><span>Remoulade, ristede løg, peberrod</span></div>
+          <div class="dish-dots"></div><div class="dish-price">145</div>
+        </div>
+        <div class="dish">
+          <div class="dish-info"><h4>Tapas-tallerken</h4><span>Sæsonens småretter · til deling</span></div>
+          <div class="dish-dots"></div><div class="dish-price">225</div>
+        </div>
+        <div class="dish">
+          <div class="dish-info"><h4>Salat</h4><span>Bagte rodfrugter, fetacreme, ristede kerner</span></div>
+          <div class="dish-dots"></div><div class="dish-price">125</div>
+        </div>
+        <div class="dish">
+          <div class="dish-info"><h4>Suppe</h4><span>Dagens · med surdej og smør</span></div>
+          <div class="dish-dots"></div><div class="dish-price">95</div>
+        </div>
+        <div class="dish">
+          <div class="dish-info"><h4>Quiche</h4><span>Med syltede grøntsager &amp; sprød salat</span></div>
+          <div class="dish-dots"></div><div class="dish-price">115</div>
+        </div>
+      </div>
+
+      <div class="menu-panel" data-panel="vin">
+        <div class="dish">
+          <div class="dish-info"><h4>Glas naturvin · hvid</h4><span>Skiftende · spørg personalet</span></div>
+          <div class="dish-dots"></div><div class="dish-price">85</div>
+        </div>
+        <div class="dish">
+          <div class="dish-info"><h4>Glas naturvin · rød</h4><span>Skiftende · let serveret kølig</span></div>
+          <div class="dish-dots"></div><div class="dish-price">85</div>
+        </div>
+        <div class="dish">
+          <div class="dish-info"><h4>Glas orange</h4><span>Skalmaceret · tanninrig</span></div>
+          <div class="dish-dots"></div><div class="dish-price">95</div>
+        </div>
+        <div class="dish">
+          <div class="dish-info"><h4>Pet-nat</h4><span>Glas · sprøde bobler</span></div>
+          <div class="dish-dots"></div><div class="dish-price">95</div>
+        </div>
+        <div class="dish">
+          <div class="dish-info"><h4>Flaske · hvid</h4><span>Fra 450 kr · spørg efter kortet</span></div>
+          <div class="dish-dots"></div><div class="dish-price">450</div>
+        </div>
+        <div class="dish">
+          <div class="dish-info"><h4>Vinsmagning</h4><span>4 glas · onsdage 17–19</span></div>
+          <div class="dish-dots"></div><div class="dish-price">295</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ─── GÅRDEN ─── -->
+  <section class="courtyard">
+    <div class="wrap reveal">
+      <p class="eyebrow">Gården</p>
+      <hr class="rule center" />
+      <p>
+        Vores gård er hjertet af Patio. Når solen skinner, åbner vi dørene og
+        inviterer dig indenfor i en af Helsingørs mest hyggelige hemmeligheder.
+      </p>
+      <div class="courtyard-tags stagger">
+        <span>Solskin</span>
+        <span>Skygge</span>
+        <span>Stille</span>
+        <span>Børnevenlig</span>
+        <span>Hundevenlig</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- ─── ÅBNINGSTIDER ─── -->
+  <section id="aabningstider" class="hours">
+    <div class="wrap">
+      <div class="intro reveal-left">
+        <p class="eyebrow">Åbningstider</p>
+        <hr class="rule" />
+        <h2>Kig forbi når<br/>du har lyst.</h2>
+        <p>Vi åbner tidligt og lukker tidligt — sådan er det her ved sundet.</p>
+        <div class="status-pill" id="statusPill">
+          <span class="dot"></span>
+          <span id="statusText">Tjekker status…</span>
+        </div>
+      </div>
+
+      <ul class="hours-list reveal-right" id="hours">
+        <li data-day="1" data-open="8" data-close="16"><span class="day">Mandag</span>   <span class="time">08 – 16</span></li>
+        <li data-day="2" data-open="8" data-close="16"><span class="day">Tirsdag</span>  <span class="time">08 – 16</span></li>
+        <li data-day="3" data-open="8" data-close="16"><span class="day">Onsdag</span>   <span class="time">08 – 16</span></li>
+        <li data-day="4" data-open="8" data-close="16"><span class="day">Torsdag</span>  <span class="time">08 – 16</span></li>
+        <li data-day="5" data-open="8" data-close="16"><span class="day">Fredag</span>   <span class="time">08 – 16</span></li>
+        <li data-day="6" data-open="9" data-close="16"><span class="day">Lørdag</span>   <span class="time">09 – 16</span></li>
+        <li data-day="0" data-open="9" data-close="16"><span class="day">Søndag</span>   <span class="time">09 – 16</span></li>
+      </ul>
+    </div>
+  </section>
+
+  <!-- ─── BORDBESTILLING ─── -->
+  <section id="booking" class="booking">
+    <div class="wrap">
+      <div class="intro reveal-left">
+        <p class="eyebrow">Bordbestilling</p>
+        <hr class="rule" />
+        <h2>Reservér<br/>et bord.</h2>
+        <p>Skriv dig på listen, så holder vi et bord klar. Vi vender tilbage indenfor få timer.</p>
+      </div>
+
+      <form class="booking-form reveal-right" id="bookingForm">
+        <div class="field">
+          <label for="b-name">Navn</label>
+          <input type="text" id="b-name" required placeholder="Dit navn" />
+        </div>
+        <div class="field">
+          <label for="b-phone">Telefon</label>
+          <input type="tel" id="b-phone" required placeholder="+45" />
+        </div>
+        <div class="field">
+          <label for="b-date">Dato</label>
+          <input type="date" id="b-date" required />
+        </div>
+        <div class="field">
+          <label for="b-time">Tid</label>
+          <input type="time" id="b-time" required />
+        </div>
+        <div class="field">
+          <label for="b-guests">Antal gæster</label>
+          <select id="b-guests" required>
+            <option value="1">1 person</option>
+            <option value="2" selected>2 personer</option>
+            <option value="3">3 personer</option>
+            <option value="4">4 personer</option>
+            <option value="5">5 personer</option>
+            <option value="6">6 personer</option>
+            <option value="7+">7+ personer</option>
+          </select>
+        </div>
+        <div class="field">
+          <label for="b-email">Email</label>
+          <input type="email" id="b-email" required placeholder="dig@email.dk" />
+        </div>
+        <div class="field full">
+          <label for="b-note">Besked (valgfri)</label>
+          <textarea id="b-note" placeholder="Allergier, særlige ønsker …"></textarea>
+        </div>
+        <div class="booking-submit">
+          <button type="submit" class="btn">
+            Send bestilling
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M5 12h14M13 5l7 7-7 7"/></svg>
+          </button>
+          <span class="form-msg" id="bookingMsg"></span>
+        </div>
+      </form>
+    </div>
+  </section>
+
+  <!-- ─── KONTAKT ─── -->
+  <section id="kontakt" class="contact">
+    <div class="wrap">
+      <div class="info reveal-left">
+        <p class="eyebrow">Find os</p>
+        <hr class="rule" />
+        <h2>Stengade 34D<br/>Helsingør</h2>
+
+        <dl>
+          <dt>Adresse</dt>
+          <dd>Stengade 34D<br/>3000 Helsingør</dd>
+
+          <dt>Telefon</dt>
+          <dd><a href="tel:+4593833038">93 83 30 38</a></dd>
+
+          <dt>Email</dt>
+          <dd><a href="mailto:Patio.helsingor@gmail.com">Patio.helsingor@gmail.com</a></dd>
+        </dl>
+
+        <div class="socials">
+          <a href="https://www.instagram.com/patio_34_/" target="_blank" rel="noopener" aria-label="Instagram">
+            <svg viewBox="0 0 24 24">
+              <rect x="3" y="3" width="18" height="18" rx="5"/>
+              <circle cx="12" cy="12" r="4"/>
+              <circle cx="17.5" cy="6.5" r="0.6" fill="currentColor" stroke="none"/>
+            </svg>
+          </a>
+          <a href="https://www.facebook.com/p/Caf%C3%A9-Patio-61556024702192/" target="_blank" rel="noopener" aria-label="Facebook">
+            <svg viewBox="0 0 24 24">
+              <path d="M15 3h-2.5A4.5 4.5 0 0 0 8 7.5V10H5.5v3H8v8h3v-8h2.7l.3-3H11V7.7c0-.6.4-1.2 1.2-1.2H15V3z"/>
+            </svg>
+          </a>
+        </div>
+      </div>
+
+      <div class="map reveal-right" aria-label="Kort over Patio, Stengade 34D, Helsingør">
+        <iframe
+          loading="lazy"
+          referrerpolicy="no-referrer-when-downgrade"
+          src="https://www.google.com/maps?q=Stengade%2034D,%203000%20Helsing%C3%B8r&output=embed">
+        </iframe>
+      </div>
+    </div>
+  </section>
+
+  <!-- ─── NYHEDSBREV ─── -->
+  <section class="newsletter">
+    <div class="wrap reveal">
+      <p class="eyebrow">Nyhedsbrev</p>
+      <hr class="rule center" />
+      <h2>Kom tæt på</h2>
+      <p>Få besked når menuen skifter, når der er vinsmagning, eller når vi har en hyggelig aften i gården.</p>
+      <form class="news-form" id="newsForm">
+        <input type="email" id="newsEmail" required placeholder="Din email" />
+        <button type="submit">Tilmeld</button>
+      </form>
+      <div class="news-msg" id="newsMsg"></div>
+    </div>
+  </section>
+
+  <!-- ─── FOOTER ─── -->
+  <footer>
+    <div class="footer-mark">PATIO</div>
+    <div class="footer-socials">
+      <a href="https://www.instagram.com/patio_34_/" target="_blank" rel="noopener" aria-label="Instagram">
+        <svg viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.5" r="0.6" fill="currentColor" stroke="none"/></svg>
+      </a>
+      <a href="https://www.facebook.com/p/Caf%C3%A9-Patio-61556024702192/" target="_blank" rel="noopener" aria-label="Facebook">
+        <svg viewBox="0 0 24 24"><path d="M15 3h-2.5A4.5 4.5 0 0 0 8 7.5V10H5.5v3H8v8h3v-8h2.7l.3-3H11V7.7c0-.6.4-1.2 1.2-1.2H15V3z"/></svg>
+      </a>
+    </div>
+    <small>© 2026 Patio · Helsingør · Stengade 34D</small>
+  </footer>
+
+  <button class="to-top" id="toTop" aria-label="Til toppen">
+    <svg viewBox="0 0 24 24"><path d="M6 14l6-6 6 6"/></svg>
+  </button>
+
+<script>
+  // Page load fade-in
+  window.addEventListener('load', () => {
+    requestAnimationFrame(() => document.body.classList.add('loaded'));
+  });
+
+  // Sticky nav
+  const nav = document.getElementById('nav');
+  const toTop = document.getElementById('toTop');
+  function onScroll() {
+    const y = window.scrollY;
+    nav.classList.toggle('scrolled', y > 40);
+    toTop.classList.toggle('show', y > 600);
+  }
+  window.addEventListener('scroll', onScroll, { passive: true });
+  onScroll();
+
+  toTop.addEventListener('click', () => window.scrollTo({ top: 0, behavior: 'smooth' }));
+
+  // Mobile nav toggle
+  const navToggle = document.getElementById('navToggle');
+  const navLinks  = document.getElementById('navLinks');
+  navToggle.addEventListener('click', () => {
+    navToggle.classList.toggle('open');
+    navLinks.classList.toggle('open');
+  });
+  navLinks.querySelectorAll('a').forEach(a => {
+    a.addEventListener('click', () => {
+      navToggle.classList.remove('open');
+      navLinks.classList.remove('open');
+    });
+  });
+
+  // Highlight today + open/closed status
+  (function () {
+    const now    = new Date();
+    const today  = now.getDay();
+    const hour   = now.getHours() + now.getMinutes() / 60;
+    const row    = document.querySelector('#hours li[data-day="' + today + '"]');
+    if (row) row.classList.add('today');
+
+    const open  = row ? parseFloat(row.dataset.open)  : null;
+    const close = row ? parseFloat(row.dataset.close) : null;
+    const pill  = document.getElementById('statusPill');
+    const txt   = document.getElementById('statusText');
+    if (open !== null && hour >= open && hour < close) {
+      txt.textContent = 'Vi har åbent nu · indtil ' + close + ':00';
+    } else {
+      pill.classList.add('closed');
+      txt.textContent = 'Vi har lukket lige nu';
+    }
+  })();
+
+  // Tabbed menu
+  const tabs   = document.querySelectorAll('.tab');
+  const panels = document.querySelectorAll('.menu-panel');
+  tabs.forEach(tab => {
+    tab.addEventListener('click', () => {
+      const target = tab.dataset.tab;
+      tabs.forEach(t => t.classList.toggle('active', t === tab));
+      panels.forEach(p => p.classList.toggle('active', p.dataset.panel === target));
+    });
+  });
+
+  // Booking form (functional client-side; opens an email with the request)
+  const bookingForm = document.getElementById('bookingForm');
+  const bookingMsg  = document.getElementById('bookingMsg');
+  bookingForm.addEventListener('submit', (e) => {
+    e.preventDefault();
+    const data = {
+      navn:    document.getElementById('b-name').value.trim(),
+      tlf:     document.getElementById('b-phone').value.trim(),
+      dato:    document.getElementById('b-date').value,
+      tid:     document.getElementById('b-time').value,
+      gaester: document.getElementById('b-guests').value,
+      email:   document.getElementById('b-email').value.trim(),
+      besked:  document.getElementById('b-note').value.trim()
+    };
+    const subject = 'Bordbestilling · ' + data.navn + ' · ' + data.dato + ' ' + data.tid;
+    const body =
+      'Navn: '    + data.navn    + '\n' +
+      'Telefon: ' + data.tlf     + '\n' +
+      'Email: '   + data.email   + '\n' +
+      'Dato: '    + data.dato    + '\n' +
+      'Tid: '     + data.tid     + '\n' +
+      'Gæster: '  + data.gaester + '\n\n' +
+      'Besked:\n' + (data.besked || '–');
+    window.location.href = 'mailto:Patio.helsingor@gmail.com'
+      + '?subject=' + encodeURIComponent(subject)
+      + '&body='    + encodeURIComponent(body);
+    bookingMsg.textContent = 'Tak — vi åbner dit mailprogram med bestillingen.';
+    bookingMsg.classList.add('show');
+    setTimeout(() => bookingMsg.classList.remove('show'), 6000);
+  });
+
+  // Newsletter (client-side confirmation)
+  const newsForm = document.getElementById('newsForm');
+  const newsMsg  = document.getElementById('newsMsg');
+  newsForm.addEventListener('submit', (e) => {
+    e.preventDefault();
+    const email = document.getElementById('newsEmail').value.trim();
+    if (!email) return;
+    newsMsg.textContent = 'Tak — vi har noteret ' + email + '.';
+    newsMsg.classList.add('show');
+    newsForm.reset();
+    setTimeout(() => newsMsg.classList.remove('show'), 6000);
+  });
+
+  // Reveal-on-scroll
+  const io = new IntersectionObserver((entries) => {
+    entries.forEach((entry) => {
+      if (entry.isIntersecting) {
+        entry.target.classList.add('in');
+        io.unobserve(entry.target);
+      }
+    });
+  }, { threshold: 0.15, rootMargin: '0px 0px -60px 0px' });
+  document.querySelectorAll('.reveal, .reveal-left, .reveal-right, .stagger').forEach(el => io.observe(el));
+
+  // Counter animation in stats
+  const counters = document.querySelectorAll('[data-count]');
+  const counterIO = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (!entry.isIntersecting) return;
+      const el = entry.target;
+      const target = parseInt(el.dataset.count, 10);
+      const dur = 1600;
+      const start = performance.now();
+      function step(now) {
+        const t = Math.min(1, (now - start) / dur);
+        const eased = 1 - Math.pow(1 - t, 3);
+        el.textContent = Math.round(target * eased);
+        if (t < 1) requestAnimationFrame(step);
+      }
+      requestAnimationFrame(step);
+      counterIO.unobserve(el);
+    });
+  }, { threshold: 0.4 });
+  counters.forEach(c => counterIO.observe(c));
+
+  // Subtle parallax on hero blobs
+  const hero = document.querySelector('.hero');
+  window.addEventListener('mousemove', (e) => {
+    const x = (e.clientX / window.innerWidth - 0.5) * 16;
+    const y = (e.clientY / window.innerHeight - 0.5) * 16;
+    hero.style.setProperty('background-position', x + 'px ' + y + 'px');
+  });
+
+  // Set min date on booking to today
+  (function () {
+    const today = new Date().toISOString().split('T')[0];
+    document.getElementById('b-date').min = today;
+    document.getElementById('b-date').value = today;
+  })();
+</script>
+
+</body>
+</html>
